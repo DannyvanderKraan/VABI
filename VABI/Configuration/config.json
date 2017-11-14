@@ -1,0 +1,7 @@
+﻿{
+  "LegoCollectorCosmosDbSettings": {
+    "EndpointUri": "https://vabi.documents.azure.com:443/",
+    "PrimaryKey": "vAuP0ODAS3IlHTFei5JWYdJphMOoEiDEShJGrMTqFl6uX9c66QCtgH56i3LIqMdlPdZISQsguLf24Fggl4HAKA==",
+    "DatabaseName": "LegoCollector"
+  }
+}
