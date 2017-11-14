@@ -12,7 +12,6 @@ namespace VABI.Repository
 {
     public class LegoCollectionsCosmosDbRepository : ILegoCollectionsRepository
     {
-        private const string DatabaseName = "LegoCollector";
         private const string CollectionName = "LegoCollections";
 
         private IDocumentClient _client;
@@ -30,7 +29,7 @@ namespace VABI.Repository
         public async Task<LegoCollection> Get(string id)
         {
             LegoCollection LegoCollection = null;
-            var response = await _client.ReadDocumentAsync(UriFactory.CreateDocumentUri(DatabaseName, CollectionName, id));
+            var response = await _client.ReadDocumentAsync(UriFactory.CreateDocumentUri(_databaseName, CollectionName, id));
             LegoCollection = (LegoCollection)(dynamic)response.Resource;
             return LegoCollection;
         }
@@ -38,7 +37,7 @@ namespace VABI.Repository
         public async Task<List<LegoCollection>> GetAll()
         {
             List<LegoCollection> LegoCollections = null;
-            var docs = await _client.ReadDocumentFeedAsync(UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName), new FeedOptions { MaxItemCount = 10 });
+            var docs = await _client.ReadDocumentFeedAsync(UriFactory.CreateDocumentCollectionUri(_databaseName, CollectionName), new FeedOptions { MaxItemCount = 10 });
             LegoCollections = docs.AsEnumerable().Select(d => (LegoCollection)(dynamic)d).ToList();
             return LegoCollections;
         }
@@ -46,7 +45,7 @@ namespace VABI.Repository
         public async Task<LegoCollection> Save(LegoCollection legoCollection)
         {
             LegoCollection newLegoCollection = null;
-            var response = await _client.UpsertDocumentAsync(UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName), legoCollection);
+            var response = await _client.UpsertDocumentAsync(UriFactory.CreateDocumentCollectionUri(_databaseName, CollectionName), legoCollection);
             newLegoCollection = (LegoCollection)(dynamic)response.Resource;
             return newLegoCollection;
         }
