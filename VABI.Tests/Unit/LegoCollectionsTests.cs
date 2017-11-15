@@ -25,9 +25,9 @@ namespace VABI.Tests.Unit
             string givenId = _fixture.Id;
             LegoCollection expectedLegoCollection = _fixture.ExpectedLegoCollection;
 
-            var result = _fixture.LegoCollectionsRepository.Get(givenId);
+            var result = _fixture.LegoCollectionsController.Get(givenId);
 
-            Assert.True(expectedLegoCollection.Id == result.Result.Id);
+            Assert.True(expectedLegoCollection.Id == ((LegoCollection)result.Result.Value).Id);
         }
 
         [Fact]
@@ -36,9 +36,9 @@ namespace VABI.Tests.Unit
         {
             int expectedNumberOfDocuments = _fixture.ExpectedLegoCollections.Count;
 
-            var result = _fixture.LegoCollectionsRepository.GetAll();
+            var result = _fixture.LegoCollectionsController.Get();
 
-            Assert.True(expectedNumberOfDocuments == result.Result.Count);
+            Assert.True(expectedNumberOfDocuments == ((List<LegoCollection>)result.Result.Value).Count);
         }
 
         //ToDo Test afmaken (zie DummyLegoCollectionsDocumentClient.CreateDocumentQuery<T>).

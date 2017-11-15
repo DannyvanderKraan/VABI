@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using VABI.Configuration;
+using VABI.Controllers;
 using VABI.Models;
 using VABI.Repository;
 using VABI.Tests.Unit.Utils;
@@ -16,10 +17,11 @@ namespace VABI.Tests.Unit.Fixtures
         public string Id { get; private set; }
         public LegoSet ExpectedLegoSet { get; private set; }
         public LegoSet UpsertedLegoSet { get; private set; }
-        public ILegoSetsRepository LegoSetsRepository { get; private set; }
         public List<LegoBlockCollected> CollectedLegoBlocks { get; private set; }
         public List<LegoSet> ExpectedLegoSets { get; private set; }
         public List<LegoSet> ExpectedLegoSetsByLegoBlocksCollection { get; private set; }
+        public ILegoSetsRepository LegoSetsRepository { get; private set; }
+        public LegoSetsController LegoSetsController { get; private set; }
 
         public LegoSetsFixture()
         {
@@ -89,6 +91,7 @@ namespace VABI.Tests.Unit.Fixtures
             IOptions<LegoCollectorCosmosDbSettings> fakeOptions = A.Fake<IOptions<LegoCollectorCosmosDbSettings>>();
             A.CallTo(() => fakeOptions.Value).Returns(connectionStrings);
             LegoSetsRepository = new LegoSetsCosmosDbRepository(new DummyLegoSetsDocumentClient(Id, ExpectedLegoSets) as IDocumentClient, fakeOptions);
+            LegoSetsController = new LegoSetsController(LegoSetsRepository);
         }
     }
 }

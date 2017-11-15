@@ -22,9 +22,9 @@ namespace VABI.Tests.Unit
             string givenId = _fixture.Id;
             LegoSet expectedLegoSet = _fixture.ExpectedLegoSet;
 
-            var result = _fixture.LegoSetsRepository.Get(givenId);
+            var result = _fixture.LegoSetsController.Get(givenId);
 
-            Assert.True(expectedLegoSet.Id == result.Result.Id);
+            Assert.True(expectedLegoSet.Id == ((LegoSet)result.Result.Value).Id);
         }
 
         [Fact]
@@ -33,21 +33,9 @@ namespace VABI.Tests.Unit
         {
             int expectedNumberOfDocuments = _fixture.ExpectedLegoSets.Count;
 
-            var result = _fixture.LegoSetsRepository.GetAll();
+            var result = _fixture.LegoSetsController.Get();
 
-            Assert.True(expectedNumberOfDocuments == result.Result.Count);
-        }
-
-        [Fact]
-        [Trait("Category", "Unit")]
-        public void Save_GivenLegoSet_ResultUpsertedLegoSet()
-        {
-            string upsertedLegoSetId = _fixture.Id;
-            LegoSet upsertedLegoSet = _fixture.UpsertedLegoSet;
-
-            var result = _fixture.LegoSetsRepository.Save(upsertedLegoSet);
-
-            Assert.True(upsertedLegoSetId == result.Result.Id);
+            Assert.True(expectedNumberOfDocuments == ((List<LegoSet>)result.Result.Value).Count);
         }
 
         //ToDo Test afmaken (zie DummyLegoSetsDocumentClient.CreateDocumentQuery<T>).
@@ -61,5 +49,17 @@ namespace VABI.Tests.Unit
 
         //    Assert.True(expectedLegoSets[0].Id == result[0].Id);
         //}
+
+        [Fact]
+        [Trait("Category", "Unit")]
+        public void Save_GivenLegoSet_ResultUpsertedLegoSet()
+        {
+            string upsertedLegoSetId = _fixture.Id;
+            LegoSet upsertedLegoSet = _fixture.UpsertedLegoSet;
+
+            var result = _fixture.LegoSetsRepository.Save(upsertedLegoSet);
+
+            Assert.True(upsertedLegoSetId == result.Result.Id);
+        }
     }
 }
