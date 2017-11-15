@@ -41,8 +41,8 @@ namespace VABI.Controllers
         public async Task<JsonResult> GetBuildableLegoSets(string id,
             [FromServices]IProvideLegoSets legoSetsProvider)
         {
-            var legoCollection = await _legoCollectionsRepository.Get(id);
-            var legoSets = await legoSetsProvider.GetByLegoBlocksInCollection(legoCollection.LegoBlocks);
+            var legoBlocks = await _legoCollectionsRepository.GetLegoBlocksInCollection(id);
+            var legoSets = await legoSetsProvider.GetByLegoBlocksInCollection(legoBlocks);
             return Json(legoSets);
         }
 

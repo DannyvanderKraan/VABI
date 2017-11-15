@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 using VABI.Models;
 
-namespace VABI.Repository
+namespace VABI.Tests.Unit.Utils
 {
-    public class LegoBlockInCollectionEqualityComparer : IEqualityComparer<LegoBlockCollected>
+    public class LegoBlockCollectedEqualityComparer : IEqualityComparer<LegoBlockCollected>
     {
         public bool Equals(LegoBlockCollected x, LegoBlockCollected y)
         {
-            return x.Id == y.Id && x.Amount >= y.Amount;
+            return x.Id == y.Id && x.Amount == y.Amount;
         }
 
         public int GetHashCode(LegoBlockCollected obj)

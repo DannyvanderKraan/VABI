@@ -10,5 +10,6 @@ namespace VABI.Repository
     {
         Task<List<LegoCollection>> GetAll();
         Task<LegoCollection> Get(string id);
+        Task<List<LegoBlockCollected>> GetLegoBlocksInCollection(string id);
     }
 }

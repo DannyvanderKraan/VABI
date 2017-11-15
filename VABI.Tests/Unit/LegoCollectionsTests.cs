@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using VABI.Models;
 using VABI.Tests.Unit.Fixtures;
+using VABI.Tests.Unit.Utils;
 using Xunit;
 
 namespace VABI.Tests.Unit
@@ -38,6 +40,17 @@ namespace VABI.Tests.Unit
 
             Assert.True(expectedNumberOfDocuments == result.Result.Count);
         }
+
+        //ToDo Test afmaken (zie DummyLegoCollectionsDocumentClient.CreateDocumentQuery<T>).
+        //[Fact]
+        //[Trait("Category", "Unit")]
+        //public async void GetLegoBlocksInCollection_GivenId_ResultExpectedCollectedLegoBlocks()
+        //{
+        //    var givenId = _fixture.Id;
+        //    var expectedCollectedLegoBlocks = _fixture.ExpectedLegoCollection.LegoBlocks;
+        //    var result = await _fixture.LegoCollectionsRepository.GetLegoBlocksInCollection(givenId);
+        //    Assert.Equal(expectedCollectedLegoBlocks, result, new LegoBlockCollectedEqualityComparer());
+        //}
 
         [Fact]
         [Trait("Category", "Unit")]

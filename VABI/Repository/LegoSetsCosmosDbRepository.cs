@@ -1,6 +1,7 @@
 ﻿using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,9 +45,15 @@ namespace VABI.Repository
 
         public async Task<List<LegoSet>> GetByLegoBlocksInCollection(List<LegoBlockCollected> legoBlocksInCollection)
         {
-            List<LegoSet> legoSets = await GetAll();
-            legoSets = legoSets.Where(l => !l.LegoBlocks.Except(legoBlocksInCollection, new LegoBlockInCollectionEqualityComparer()).Any()).ToList();
-            return legoSets;
+            FeedOptions queryOptions = new FeedOptions() { MaxItemCount = 10 };
+            var query = "SELECT * " +
+                "FROM LegoSets c " +
+                "WHERE udf.isLegoBlockInCollection(c.legoBlocks, " + JsonConvert.SerializeObject(legoBlocksInCollection) + ")";
+            IQueryable<LegoSet> legoSetsByLegoBlocksQuery = _client.CreateDocumentQuery<LegoSet>(
+                UriFactory.CreateDocumentCollectionUri(_databaseName, CollectionName),
+                query,
+                queryOptions);
+            return legoSetsByLegoBlocksQuery.ToList();
         }
 
         public async Task<LegoSet> Save(LegoSet legoSet)

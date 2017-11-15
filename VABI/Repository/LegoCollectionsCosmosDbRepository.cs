@@ -42,6 +42,20 @@ namespace VABI.Repository
             return LegoCollections;
         }
 
+        public async Task<List<LegoBlockCollected>> GetLegoBlocksInCollection(string id)
+        {
+            FeedOptions queryOptions = new FeedOptions() { MaxItemCount = 10 };
+            var query = "SELECT b.id, b.amount " +
+                "FROM LegoCollections c " +
+                "JOIN b IN c.legoBlocks " +
+                "WHERE c.id = '" + id + "'";
+            IQueryable<LegoBlockCollected> legoBlocksInCollectionQuery = _client.CreateDocumentQuery<LegoBlockCollected>(
+                UriFactory.CreateDocumentCollectionUri(_databaseName, CollectionName),
+                query,
+                queryOptions);
+            return legoBlocksInCollectionQuery.ToList();
+        }
+
         public async Task<LegoCollection> Save(LegoCollection legoCollection)
         {
             LegoCollection newLegoCollection = null;
