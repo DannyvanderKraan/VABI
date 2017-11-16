@@ -15,11 +15,13 @@ namespace VABI.Tests.Unit.Utils
     {
         private string _documentId;
         private List<LegoSet> _legoSets;
+        private List<LegoSet> _expectedLegoSetsByLegoBlocksCollection;
 
-        public DummyLegoSetsDocumentClient(string documentId, List<LegoSet> legoSets)
+        public DummyLegoSetsDocumentClient(string documentId, List<LegoSet> legoSets, List<LegoSet> expectedLegoSetsByLegoBlocksCollection)
         {
             _documentId = documentId;
             _legoSets = legoSets;
+            _expectedLegoSetsByLegoBlocksCollection = expectedLegoSetsByLegoBlocksCollection;
 
         }
         public object Session { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -223,7 +225,9 @@ namespace VABI.Tests.Unit.Utils
 
         public IQueryable<T> CreateDocumentQuery<T>(Uri documentCollectionUri, string sqlExpression, FeedOptions feedOptions = null)
         {
-            throw new NotImplementedException();
+            List<T> legoSets = new List<T>();
+            _expectedLegoSetsByLegoBlocksCollection.ForEach(s => legoSets.Add((dynamic)s));
+            return legoSets.AsQueryable();
         }
 
         public IQueryable<T> CreateDocumentQuery<T>(Uri documentCollectionUri, SqlQuerySpec querySpec, FeedOptions feedOptions = null)

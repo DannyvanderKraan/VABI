@@ -39,16 +39,16 @@ namespace VABI.Tests.Unit
         }
 
         //ToDo Test afmaken (zie DummyLegoSetsDocumentClient.CreateDocumentQuery<T>).
-        //[Fact]
-        //[Trait("Category", "Unit")]
-        //public async void GetByLegoBlocksInCollection_GivenLegoBlocks_ResultExpectedLegoSets()
-        //{
-        //    List<LegoSet> expectedLegoSets = _fixture.ExpectedLegoSetsByLegoBlocksCollection;
+        [Fact]
+        [Trait("Category", "Unit")]
+        public async void GetByLegoBlocksInCollection_GivenLegoBlocks_ResultExpectedLegoSets()
+        {
+            List<LegoSet> expectedLegoSets = _fixture.ExpectedLegoSetsByLegoBlocksCollection;
 
-        //    var result = await _fixture.LegoSetsRepository.GetByLegoBlocksInCollection(_fixture.CollectedLegoBlocks);
+            var result = await _fixture.LegoSetsRepository.GetByLegoBlocksInCollection(_fixture.CollectedLegoBlocks);
 
-        //    Assert.True(expectedLegoSets[0].Id == result[0].Id);
-        //}
+            Assert.True(expectedLegoSets[0].Id == result[0].Id);
+        }
 
         [Fact]
         [Trait("Category", "Unit")]

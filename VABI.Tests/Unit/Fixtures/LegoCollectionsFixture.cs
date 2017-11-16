@@ -66,7 +66,7 @@ namespace VABI.Tests.Unit.Fixtures
             };
             IOptions<LegoCollectorCosmosDbSettings> fakeOptions = A.Fake<IOptions<LegoCollectorCosmosDbSettings>>();
             A.CallTo(() => fakeOptions.Value).Returns(connectionStrings);
-            LegoCollectionsRepository = new LegoCollectionsCosmosDbRepository(new DummyLegoCollectionsDocumentClient(Id, ExpectedLegoCollections) as IDocumentClient, fakeOptions);
+            LegoCollectionsRepository = new LegoCollectionsCosmosDbRepository(new DummyLegoCollectionsDocumentClient(Id, ExpectedLegoCollections, ExpectedLegoCollection.LegoBlocks) as IDocumentClient, fakeOptions);
             LegoCollectionsController = new LegoCollectionsController(LegoCollectionsRepository);
         }
     }
