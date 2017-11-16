@@ -14,6 +14,8 @@ namespace VABI.Tests.Unit.Fixtures
 {
     public class LegoSetsFixture
     {
+        private const string DataBaseName = "JustSomeDummyString";
+
         public string Id { get; private set; }
         public LegoSet ExpectedLegoSet { get; private set; }
         public LegoSet UpsertedLegoSet { get; private set; }
@@ -26,22 +28,47 @@ namespace VABI.Tests.Unit.Fixtures
         public LegoSetsFixture()
         {
             Id = Guid.NewGuid().ToString();
-            ExpectedLegoSet = new LegoSet()
+            GetExpectedLegoSet();
+            GetUpsertedLegoSet();
+            GetCollectedLegoBlocks();
+            GetExpectedLegoSets();
+            GetExpectedLegoSetsByLegoBlocksCollection();
+            GetLegoSetsRepository();
+            LegoSetsController = new LegoSetsController(LegoSetsRepository);
+        }
+
+        private void GetLegoSetsRepository()
+        {
+            LegoCollectorCosmosDbSettings connectionStrings = new LegoCollectorCosmosDbSettings()
             {
-                Id = Id
+                DatabaseName = DataBaseName
             };
-            UpsertedLegoSet = new LegoSet()
+            IOptions<LegoCollectorCosmosDbSettings> fakeOptions = A.Fake<IOptions<LegoCollectorCosmosDbSettings>>();
+            A.CallTo(() => fakeOptions.Value).Returns(connectionStrings);
+            LegoSetsRepository = new LegoSetsCosmosDbRepository(new DummyLegoSetsDocumentClient(Id, ExpectedLegoSets, ExpectedLegoSetsByLegoBlocksCollection) as IDocumentClient, fakeOptions);
+        }
+
+        private void GetExpectedLegoSetsByLegoBlocksCollection()
+        {
+            ExpectedLegoSetsByLegoBlocksCollection = new List<LegoSet>()
             {
-                Id = Id
-            };
-            CollectedLegoBlocks = new List<LegoBlockCollected>()
-            {
-                new LegoBlockCollected()
+                new LegoSet()
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    Amount = 12
+                    Id = ExpectedLegoSets[0].Id,
+                    LegoBlocks = new List<LegoBlockCollected>()
+                    {
+                        new LegoBlockCollected()
+                        {
+                            Id = ExpectedLegoSets[0].LegoBlocks[0].Id,
+                            Amount = ExpectedLegoSets[0].LegoBlocks[0].Amount
+                        }
+                    }
                 }
             };
+        }
+
+        private void GetExpectedLegoSets()
+        {
             ExpectedLegoSets = new List<LegoSet>()
             {
                 new LegoSet()
@@ -69,29 +96,34 @@ namespace VABI.Tests.Unit.Fixtures
                     }
                 }
             };
-            ExpectedLegoSetsByLegoBlocksCollection = new List<LegoSet>()
+        }
+
+        private void GetCollectedLegoBlocks()
+        {
+            CollectedLegoBlocks = new List<LegoBlockCollected>()
             {
-                new LegoSet()
+                new LegoBlockCollected()
                 {
-                    Id = ExpectedLegoSets[0].Id,
-                    LegoBlocks = new List<LegoBlockCollected>()
-                    {
-                        new LegoBlockCollected()
-                        {
-                            Id = ExpectedLegoSets[0].LegoBlocks[0].Id,
-                            Amount = ExpectedLegoSets[0].LegoBlocks[0].Amount
-                        }
-                    }
+                    Id = Guid.NewGuid().ToString(),
+                    Amount = 12
                 }
             };
-            LegoCollectorCosmosDbSettings connectionStrings = new LegoCollectorCosmosDbSettings()
+        }
+
+        private void GetUpsertedLegoSet()
+        {
+            UpsertedLegoSet = new LegoSet()
             {
-                DatabaseName = "Test"
+                Id = Id
             };
-            IOptions<LegoCollectorCosmosDbSettings> fakeOptions = A.Fake<IOptions<LegoCollectorCosmosDbSettings>>();
-            A.CallTo(() => fakeOptions.Value).Returns(connectionStrings);
-            LegoSetsRepository = new LegoSetsCosmosDbRepository(new DummyLegoSetsDocumentClient(Id, ExpectedLegoSets, ExpectedLegoSetsByLegoBlocksCollection) as IDocumentClient, fakeOptions);
-            LegoSetsController = new LegoSetsController(LegoSetsRepository);
+        }
+
+        private void GetExpectedLegoSet()
+        {
+            ExpectedLegoSet = new LegoSet()
+            {
+                Id = Id
+            };
         }
     }
 }

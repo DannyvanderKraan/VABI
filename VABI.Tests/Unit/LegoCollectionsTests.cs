@@ -47,8 +47,22 @@ namespace VABI.Tests.Unit
         {
             var givenId = _fixture.Id;
             var expectedCollectedLegoBlocks = _fixture.ExpectedLegoCollection.LegoBlocks;
+
             var result = await _fixture.LegoCollectionsRepository.GetLegoBlocksInCollection(givenId);
+
             Assert.Equal(expectedCollectedLegoBlocks, result, new LegoBlockCollectedEqualityComparer());
+        }
+
+        [Fact]
+        [Trait("Category", "Unit")]
+        public async void GetBuildableLegoSets_GivenId_ResultExpectedLegoSets()
+        {
+            var givenId = _fixture.Id;
+            var expectedLegoSets = _fixture.ExpectedLegoSetsByLegoBlocksCollection;
+
+            var result = await _fixture.LegoCollectionsController.GetBuildableLegoSets(givenId, _fixture.LegoSetsProvider);
+
+            Assert.Equal(expectedLegoSets, ((List<LegoSet>)result.Value), new LegoSetEqualityComparer());
         }
 
         [Fact]
