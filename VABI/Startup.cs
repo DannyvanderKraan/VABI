@@ -24,7 +24,7 @@ namespace VABI
             configurationBuilder.SetBasePath(env.ContentRootPath);
 
             configurationBuilder.AddJsonFile($@"Configuration\config.json");
-
+            configurationBuilder.AddEnvironmentVariables();
             Configuration = configurationBuilder.Build();
 
         }
