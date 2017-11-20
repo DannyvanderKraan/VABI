@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Text;
 using VABI.Configuration;
 using VABI.Controllers;
-using VABI.Models;
-using VABI.Repository;
+using VABI.Models.Utils;
+using VABI.Repositories;
+using VABI.Repositories.DTOs;
 using VABI.Tests.Unit.Utils;
 
 namespace VABI.Tests.Unit.Fixtures
@@ -24,6 +25,8 @@ namespace VABI.Tests.Unit.Fixtures
         public List<LegoSet> ExpectedLegoSetsByLegoBlocksCollection { get; private set; }
         public ILegoSetsRepository LegoSetsRepository { get; private set; }
         public LegoSetsController LegoSetsController { get; private set; }
+        public IMapper<Models.LegoSet, Repositories.DTOs.LegoSet> LegoSetMapper { get; private set; }
+
 
         public LegoSetsFixture()
         {
@@ -34,7 +37,15 @@ namespace VABI.Tests.Unit.Fixtures
             GetExpectedLegoSets();
             GetExpectedLegoSetsByLegoBlocksCollection();
             GetLegoSetsRepository();
-            LegoSetsController = new LegoSetsController(LegoSetsRepository);
+            GetLegoSetMapper();
+
+            LegoSetsController = new LegoSetsController(LegoSetsRepository, LegoSetMapper);
+        }
+
+        private void GetLegoSetMapper()
+        {
+            LegoBlockCollectedMapper legoBlockCollectedMapper = new LegoBlockCollectedMapper();
+            LegoSetMapper = new LegoSetMapper(legoBlockCollectedMapper) as IMapper<Models.LegoSet, Repositories.DTOs.LegoSet>;
         }
 
         private void GetLegoSetsRepository()

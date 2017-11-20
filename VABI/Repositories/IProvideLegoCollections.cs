@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using VABI.Models;
+using VABI.Repositories.DTOs;
 
-namespace VABI.Repository
+namespace VABI.Repositories
 {
     public interface IProvideLegoCollections
     {

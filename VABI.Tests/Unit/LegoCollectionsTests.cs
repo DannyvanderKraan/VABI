@@ -23,7 +23,7 @@ namespace VABI.Tests.Unit
         public void Get_GivenId_ResultExpectedLegoCollection()
         {
             string givenId = _fixture.Id;
-            LegoCollection expectedLegoCollection = _fixture.ExpectedLegoCollection;
+            Repositories.DTOs.LegoCollection expectedLegoCollection = _fixture.ExpectedLegoCollection;
 
             var result = _fixture.LegoCollectionsController.Get(givenId);
 
@@ -50,7 +50,7 @@ namespace VABI.Tests.Unit
 
             var result = await _fixture.LegoCollectionsRepository.GetLegoBlocksInCollection(givenId);
 
-            Assert.Equal(expectedCollectedLegoBlocks, result, new LegoBlockCollectedEqualityComparer());
+            Assert.Equal(expectedCollectedLegoBlocks, result, new LegoBlockCollectedDTOEqualityComparer());
         }
 
         [Fact]
@@ -60,9 +60,9 @@ namespace VABI.Tests.Unit
             var givenId = _fixture.Id;
             var expectedLegoSets = _fixture.ExpectedLegoSetsByLegoBlocksCollection;
 
-            var result = await _fixture.LegoCollectionsController.GetBuildableLegoSets(givenId, _fixture.LegoSetsProvider);
+            var result = await _fixture.LegoCollectionsController.GetBuildableLegoSets(givenId, _fixture.LegoSetsProvider, _fixture.LegoSetMapper);
 
-            Assert.Equal(expectedLegoSets, ((List<LegoSet>)result.Value), new LegoSetEqualityComparer());
+            Assert.Equal(expectedLegoSets.Select(s => _fixture.LegoSetMapper.MapToModel(s)).ToList(), ((List<LegoSet>)result.Value), new LegoSetEqualityComparer());
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace VABI.Tests.Unit
         public void Save_GivenLegoCollection_ResultUpsertedLegoCollection()
         {
             string upsertedLegoCollectionId = _fixture.Id;
-            LegoCollection upsertedLegoCollection = _fixture.UpsertedLegoCollection;
+            Repositories.DTOs.LegoCollection upsertedLegoCollection = _fixture.UpsertedLegoCollection;
 
             var result = _fixture.LegoCollectionsRepository.Save(upsertedLegoCollection);
 

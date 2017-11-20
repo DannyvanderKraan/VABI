@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
-using VABI.Models;
+using VABI.Repositories.DTOs;
 using Microsoft.Azure.Documents;
 
 namespace VABI.Tests.Unit.Utils

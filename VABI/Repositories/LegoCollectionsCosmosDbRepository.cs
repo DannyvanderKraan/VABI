@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VABI.Configuration;
-using VABI.Models;
+using VABI.Repositories.DTOs;
 
-namespace VABI.Repository
+namespace VABI.Repositories
 {
     public class LegoCollectionsCosmosDbRepository : ILegoCollectionsRepository
     {

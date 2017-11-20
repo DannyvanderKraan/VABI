@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VABI.Models;
-using VABI.Repository;
+using VABI.Repositories;
+using VABI.Models.Utils;
 
 namespace VABI.Controllers
 {
@@ -13,19 +14,21 @@ namespace VABI.Controllers
     public class LegoCollectionsController : Controller
     {
         private ILegoCollectionsRepository _legoCollectionsRepository;
+        private IMapper<LegoCollection, Repositories.DTOs.LegoCollection> _legoCollectionMapper;
 
-        public LegoCollectionsController(ILegoCollectionsRepository legoCollectionsRepository)
+        public LegoCollectionsController(ILegoCollectionsRepository legoCollectionsRepository, IMapper<LegoCollection, Repositories.DTOs.LegoCollection> mapper)
         {
-            if (legoCollectionsRepository is null) throw new ArgumentNullException(nameof(legoCollectionsRepository));
-            _legoCollectionsRepository = legoCollectionsRepository;
+            _legoCollectionsRepository = legoCollectionsRepository ?? throw new ArgumentNullException(nameof(legoCollectionsRepository));
+            _legoCollectionMapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         // GET api/LegoCollections
         [HttpGet]
         public async Task<JsonResult> Get()
         {
+            //TODO Enkel voor dev, in productie niet doen!
             var legoCollections = await _legoCollectionsRepository.GetAll();
-            return Json(legoCollections);
+            return Json(legoCollections.Select(c => _legoCollectionMapper.MapToModel(c)).ToList());
         }
 
         // GET api/LegoCollections/5
@@ -33,17 +36,18 @@ namespace VABI.Controllers
         public async Task<JsonResult> Get(string id)
         {
             var legoCollection = await _legoCollectionsRepository.Get(id);
-            return Json(legoCollection);
+            return Json(_legoCollectionMapper.MapToModel(legoCollection));
         }
 
         // GET api/LegoCollections/5/BuildableLegoSets
         [HttpGet("{id}/GetBuildableLegoSets")]
         public async Task<JsonResult> GetBuildableLegoSets(string id,
-            [FromServices]IProvideLegoSets legoSetsProvider)
+            [FromServices]IProvideLegoSets legoSetsProvider,
+            [FromServices]IMapper<LegoSet, Repositories.DTOs.LegoSet> legoSetMapper)
         {
             var legoBlocks = await _legoCollectionsRepository.GetLegoBlocksInCollection(id);
             var legoSets = await legoSetsProvider.GetByLegoBlocksInCollection(legoBlocks);
-            return Json(legoSets);
+            return Json(legoSets.Select(s => legoSetMapper.MapToModel(s)).ToList());
         }
 
         // POST api/LegoCollections
@@ -51,8 +55,7 @@ namespace VABI.Controllers
         public async void Post([FromBody]LegoCollection legoCollection)
         {
             legoCollection.Id = Guid.NewGuid().ToString();
-            var upsertedLegoSet = await _legoCollectionsRepository.Save(legoCollection);
-            //ToDo Iets nuttigs doen met upsertedLegoCollection.
+            var upsertedLegoSet = await _legoCollectionsRepository.Save(_legoCollectionMapper.MapToDTO(legoCollection));
         }
 
         // PUT api/LegoCollections/5
@@ -60,8 +63,7 @@ namespace VABI.Controllers
         public async void Put(string id, [FromBody]LegoCollection legoCollection)
         {
             legoCollection.Id = id;
-            var upsertedLegoSet = await _legoCollectionsRepository.Save(legoCollection);
-            //ToDo Iets nuttigs doen met upsertedLegoCollection.
+            var upsertedLegoSet = await _legoCollectionsRepository.Save(_legoCollectionMapper.MapToDTO(legoCollection));
         }
     }
 }

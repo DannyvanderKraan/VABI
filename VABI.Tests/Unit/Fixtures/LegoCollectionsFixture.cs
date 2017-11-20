@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Text;
 using VABI.Configuration;
 using VABI.Controllers;
-using VABI.Models;
-using VABI.Repository;
+using VABI.Models.Utils;
+using VABI.Repositories;
+using VABI.Repositories.DTOs;
 using VABI.Tests.Unit.Utils;
 
 namespace VABI.Tests.Unit.Fixtures
@@ -22,7 +23,9 @@ namespace VABI.Tests.Unit.Fixtures
         public List<LegoSet> ExpectedLegoSetsByLegoBlocksCollection { get; private set; }
         public ILegoCollectionsRepository LegoCollectionsRepository { get; private set; }
         public LegoCollectionsController LegoCollectionsController { get; private set; }
+        public IMapper<Models.LegoCollection, Repositories.DTOs.LegoCollection> LegoCollectionMapper { get; private set; }
         public IProvideLegoSets LegoSetsProvider { get; private set; }
+        public IMapper<Models.LegoSet, Repositories.DTOs.LegoSet> LegoSetMapper { get; private set; }
 
         public LegoCollectionsFixture()
         {
@@ -34,11 +37,25 @@ namespace VABI.Tests.Unit.Fixtures
             GetExpectedLegoSets();
             GetExpectedLegoSetsByLegoBlocksCollection();
             GetLegoCollectionsRepository();
+            GetLegoCollectionMapper();
+            GetLegoSetMapper();
 
-            LegoCollectionsController = new LegoCollectionsController(LegoCollectionsRepository);
+            LegoCollectionsController = new LegoCollectionsController(LegoCollectionsRepository, LegoCollectionMapper);
 
             GetLegoSetsProvider();
 
+        }
+
+        private void GetLegoSetMapper()
+        {
+            LegoBlockCollectedMapper legoBlockCollectedMapper = new LegoBlockCollectedMapper();
+            LegoSetMapper = new LegoSetMapper(legoBlockCollectedMapper) as IMapper<Models.LegoSet, Repositories.DTOs.LegoSet>;
+        }
+
+        private void GetLegoCollectionMapper()
+        {
+            LegoBlockCollectedMapper legoBlockCollectedMapper = new LegoBlockCollectedMapper();
+            LegoCollectionMapper = new LegoCollectionMapper(legoBlockCollectedMapper) as IMapper<Models.LegoCollection, Repositories.DTOs.LegoCollection>;
         }
 
         private void GetLegoSetsProvider()

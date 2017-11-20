@@ -21,7 +21,7 @@ namespace VABI.Tests.Unit
         public void Get_GivenId_ResultExpectedLegoSet()
         {
             string givenId = _fixture.Id;
-            LegoSet expectedLegoSet = _fixture.ExpectedLegoSet;
+            Repositories.DTOs.LegoSet expectedLegoSet = _fixture.ExpectedLegoSet;
 
             var result = _fixture.LegoSetsController.Get(givenId);
 
@@ -43,11 +43,11 @@ namespace VABI.Tests.Unit
         [Trait("Category", "Unit")]
         public async void GetByLegoBlocksInCollection_GivenLegoBlocks_ResultExpectedLegoSets()
         {
-            List<LegoSet> expectedLegoSets = _fixture.ExpectedLegoSetsByLegoBlocksCollection;
+            List<Repositories.DTOs.LegoSet> expectedLegoSets = _fixture.ExpectedLegoSetsByLegoBlocksCollection;
 
             var result = await _fixture.LegoSetsRepository.GetByLegoBlocksInCollection(_fixture.CollectedLegoBlocks);
 
-            Assert.Equal(expectedLegoSets, result, new LegoSetEqualityComparer());
+            Assert.Equal(expectedLegoSets, result, new LegoSetDTOEqualityComparer());
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace VABI.Tests.Unit
         public void Save_GivenLegoSet_ResultUpsertedLegoSet()
         {
             string upsertedLegoSetId = _fixture.Id;
-            LegoSet upsertedLegoSet = _fixture.UpsertedLegoSet;
+            Repositories.DTOs.LegoSet upsertedLegoSet = _fixture.UpsertedLegoSet;
 
             var result = _fixture.LegoSetsRepository.Save(upsertedLegoSet);
 

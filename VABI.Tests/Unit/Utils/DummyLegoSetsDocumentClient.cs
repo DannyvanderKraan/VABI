@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
-using VABI.Models;
+using VABI.Repositories.DTOs;
 
 namespace VABI.Tests.Unit.Utils
 {
